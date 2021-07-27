@@ -39,11 +39,12 @@ chain --autofree https://boot.netboot.xyz
 
 ```conf
 menuentry 'netboot.xyz' {
-    set root='hd0,msdos1'
+    set root='hd0,msdos1'   #hd0可能需要根据实际情况替换为其它值
     linux16 /boot/netboot.xyz.lkrn
     initrd16 /boot/netboot.xyz-initrd
 }
 ```
+在 Ubuntu 等系统下，你可能还需要修改 `/etc/default/grub`，让 Grub 在启动的时候显示启动菜单。
 
 更新 grub 配置：
 
@@ -57,6 +58,11 @@ update-grub
 grub-mkconfig -o /boot/grub/grub.cfg
 ```
 
+或
+
+```sh
+grub2-mkconfig -o /boot/grub2/grub.cfg
+```
 # 3、重启
 
 重启 VPS，然后通过 VNC 访问，在启动菜单中选择 `netboot.xyz` 来进行启动。
