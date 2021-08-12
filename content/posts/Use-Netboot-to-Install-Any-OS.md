@@ -39,12 +39,15 @@ chain --autofree https://boot.netboot.xyz
 
 ```conf
 menuentry 'netboot.xyz' {
-    set root='hd0,msdos1'   #hd0可能需要根据实际情况替换为其它值
+    set root='hd0,msdos1'
     linux16 /boot/netboot.xyz.lkrn
     initrd16 /boot/netboot.xyz-initrd
 }
 ```
-在 Ubuntu 等系统下，你可能还需要修改 `/etc/default/grub`，让 Grub 在启动的时候显示启动菜单。
+
+`root` 的实际所在分区因人而异，你需要确认你的 `/boot` 究竟是哪个分区，同时要注意，如果你用的是 GPT 分区表，那么 `msdos` 需要换成 `gpt`。
+
+在 Ubuntu 等系统下，你可能还需要修改 `/etc/default/grub` 文件或者 `/etc/default/grub.d/` 下的文件，以便让 Grub 在启动的时候显示启动菜单。
 
 更新 grub 配置：
 
