@@ -21,7 +21,7 @@ draft: false
 
 ## 连接到 VPS
 
-[通过 netboot.xyz 安装 Alpine Linux](Use-Netboot-to-Install-Any-OS.md)，记得开启 OpenSSH 或 Dropbear，然后通过 PuTTY、`ssh` 命令等工具连上你的 VPS。
+[通过 netboot.xyz 安装 Alpine Linux](Use-Netboot-to-Install-Any-OS)，记得开启 OpenSSH 或 Dropbear，然后通过 PuTTY、`ssh` 命令等工具连上你的 VPS。
 
 ## 下载与安装 Shadowsocks-Rust
 
