@@ -2,7 +2,7 @@ baseURL = "https://blog.2333ma.ml/"
 languageCode = "zh-cn"
 title = "Markson 的梦话空间"
 DefaultContentLanguage = "cn"
-theme = "PaperMod"
+theme = "diary"
 
 [params]
 subtitle = "薛定谔状态中……"

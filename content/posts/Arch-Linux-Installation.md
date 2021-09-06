@@ -2,6 +2,7 @@
 title: "Arch Linux 安装教程"
 date: 2021-07-07T10:27:12+08:00
 draft: false
+tags: Linux
 ---
 
 # 一、准备安装媒介
@@ -99,15 +100,13 @@ mount /dev/sdX1 /mnt/boot/efi
 
 ## 3.2 准备软件源
 
-Arch Linux 的安装镜像会自动根据速度来自动建立一个软件源列表，因而一般无需手动编辑软件源。如果你需要修改软件源以选择你感觉最快的服务器，使用 nano 或者 vim 打开软件源配置文件：
+Arch Linux 的安装镜像会自动根据速度来自动建立一个软件源列表，__因而一般无需手动编辑软件源__。如果你需要修改软件源以选择你感觉最快的服务器，使用 nano 或者 vim 打开软件源配置文件：
 
 ```sh
 nano /etc/pacman.d/mirrorlist
 ```
 
-在文件开头加上至少一个中国的软件源，不过建议多添加几个：
-
-```conf
+```ini
 ## 中国的软件源
 ## 腾讯
 Server = https://mirrors.cloud.tencent.com/archlinux/$repo/os/$arch
@@ -148,33 +147,37 @@ cat /mnt/etc/fstab
 arch-chroot /mnt
 ```
 
-设置时区
+### 设置时区
 
 ```sh
 ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 hwclock --systohc
 ```
 
-修改 root 密码
+### 修改 root 密码
 
 ```sh
 passwd root
 ```
 
-设置 locale，使用 nano 编辑 ```/etc/locale.gen``` ，一般取消 ```zh_CN```开头的注释即可，然后运行以下命令以配置语言：
+### 设置 locale
+
+编辑 `/etc/locale.gen` ，一般取消 `zh_CN.UTF-8` 的注释即可，然后运行以下命令以配置语言：
 
 ```sh
 locale-gen
 ```
 
-新建或者编辑 ```/etc/locale.conf``` 文件，配置全局语言。
+新建或者编辑 `/etc/locale.conf` 文件，配置全局语言。
 
 ```sh
 echo 'LANG=zh_CN.UTF-8' > /etc/locale.conf
 ```
 >如果不使用图形界面则需要把本地设置改为 ```LANG=en_US.UTF-8``` ,这是为了 TTY 始终以英文显示（在 TTY 下，中文会显示成一个个方块或者方框）。
 
-新建 ```/etc/hostname``` 文件，用于保存主机名，同时，编辑 ```/etc/hosts``` 文件，设置```localhost```本地回环 IP 与你的主机 IP（替换下面的 hostname 为你自己设置的主机名）：
+### 主机名与Host文件
+
+新建 `/etc/hostname` 文件，用于保存主机名，同时，编辑 ```/etc/hosts``` 文件，设置```localhost```本地回环 IP 与你的主机 IP（替换下面的 hostname 为你自己设置的主机名）：
 
 ```conf
 127.0.0.1 localhost
@@ -182,33 +185,35 @@ echo 'LANG=zh_CN.UTF-8' > /etc/locale.conf
 127.0.1.1 hostname.localdomain hostname
 ```
 
-安装 ucode
+### 安装 ucode
 
 ```sh
 pacman -S intel-ucode # 或者安装 amd-ucode
 ```
 
-## 4.2 安装启动管理器
+## 4.2 启动管理器
 
 >Arch Linux 官方 GRUB Wiki：<https://wiki.archlinux.org/index.php/GRUB>
 
-安装基本程序：
+### 安装基本程序：
 
 ```sh
 pacman -S os-prober grub efibootmgr
 ```
 
-安装 Grub 启动管理器：
+### 安装 Grub 启动管理器：
 
 ```sh
-grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Arch
+grub-install
 grub-mkconfig -o /boot/grub/grub.cfg
 ```
+
+`grub-install` 能够自动检查启动类型然后安装合适的引导，如果安装失败，那你需要手动指定安装参数。
 
 如果是新建立的 ESP，那么建议再执行以下步骤，否则 Arch Linux 将可能只能启动一次：
 
 ```sh
-mkdir /boot/efi/BOOT && cp /boot/efi/Arch/grubx64.efi /boot/efi/BOOT/BOOTx64.efi
+mkdir /boot/efi/BOOT && cp /boot/efi/arch/grubx64.efi /boot/efi/BOOT/BOOTx64.efi
 ```
 
 ## 4.3 添加非特权用户
@@ -243,13 +248,13 @@ pacman -S mesa nvidia-lts nvidia-settings
 
 以下服务二选一，不可以同时启用。
 
-### 4.5.1 Network Manager 服务（与大部分桌面集成很好）
+### Network Manager 服务（与大部分桌面集成很好）
 
 ```sh
 pacman -S networkmanager
 systemctl enable NetworkManager
 ``` 
-### 4.5.2 systemd-networkd + iwd （通用的命令行界面）
+### systemd-networkd + iwd （通用的命令行界面）
 
 ```sh
 pacman -S iwd
@@ -261,7 +266,7 @@ ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 
 无线配置：
 
-```conf
+```ini
 # /etc/systemd/network/wireless.network
 [Match]
 Name=wl*
@@ -272,7 +277,7 @@ DHCP=yes
 
 有线配置：
 
-```conf
+```ini
 # /etc/systemd/network/wired.network
 [Match]
 Name=en*
@@ -301,7 +306,7 @@ systemctl enable gdm
 ### KDE Plasma
 
 ```sh
-pacman -S plasma kde-system kde-utilities kde-graphics sddm xdg-user-dirs
+pacman -S plasma kde-system kde-utilities kde-graphics xdg-user-dirs
 systemctl enable sddm
 ```
 ## 4.7 蓝牙
@@ -338,14 +343,25 @@ sudo pacman -S noto-fonts noto-fonts-extra noto-fonts-emoji
 
 ### 中日韩统一汉字字体
 
-__思源字体（推荐）__
+__思源字体地区分包版本（推荐）__
+
+```sh
+sudo pacman -S adobe-source-han-mono-cn-fonts adobe-source-han-sans-cn-fonts adobe-source-han-serif-cn-fonts 
+```
+
+>`adobe-source-han-mono-cn-fonts` 在 Arch Linux CN 源提供，建议添加 Arch Linux CN 源来安装。
+
+如果有显示日文或韩文、台湾版本繁体字的需求，那么你还可以安装 `ja`、`kr` 与 `tw` 的版本。多个版本之间并不冲突。
+
+__思源字体 OTC 版本__
 
 ```sh
 sudo pacman -S adobe-source-han-mono-otc-fonts adobe-source-han-sans-otc-fonts adobe-source-han-serif-otc-fonts
 ```
->`adobe-source-han-mono-otc-fonts` 只在 AUR 或 Arch Linux CN 源提供，建议添加 Arch Linux CN 源来安装。
+>`adobe-source-han-mono-otc-fonts` 在 Arch Linux CN 源提供，建议添加 Arch Linux CN 源来安装。
 
 __Noto Sans CJK__
+
 ```sh
 sudo pacman -S noto-fonts-cjk
 ```
@@ -354,7 +370,7 @@ __更纱黑体__
 ```sh
 sudo pacman -S ttf-sarasa-gothic
 ```
->`ttf-sarasa-gothic` 只在 AUR 或 Arch Linux CN 源提供，建议添加 Arch Linux CN 源来安装。
+>`ttf-sarasa-gothic` 在 Arch Linux CN 源提供，建议添加 Arch Linux CN 源来安装。
 
 ### 汉字大字符集字体
 
@@ -363,9 +379,9 @@ __花园明朝__
 sudo pacman -S ttf-hanazono
 ```
 
-### 字体优先级
+### 字体优先级（可选）
 
-中日韩统一汉字字体同时包含了多个版本的汉字，而不同版本的汉字使用者的需求不一样，以下是以中国大陆版本的思源字体版本为例子：
+如果你使用思源字体 OTC 版本或者 Noto CJK，那么你需要调整字符优先级。因为这两款字体同时包含了多个版本的汉字，而不同版本的汉字使用者的需求不一样。以下配置会把中国大陆的标准字符配置为最高优先级（以思源字体 OTC 版本为例子）：
 
 新建```/etc/fonts/conf.avail/64-language-selector-prefer.conf```文件
 
@@ -407,7 +423,6 @@ sudo ln -s /etc/fonts/conf.avail/64-language-selector-prefer.conf /etc/fonts/con
 
 >Arch Linux 官方文档  
 >iBus：<https://wiki.archlinux.org/index.php/IBus_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)>  
->fcitx4：<https://wiki.archlinux.org/index.php/Fcitx_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)>  
 >fcitx5：<https://wiki.archlinux.org/index.php/Fcitx5_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)>  
 
 # 六、第三方软件源
