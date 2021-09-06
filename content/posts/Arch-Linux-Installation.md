@@ -35,14 +35,14 @@ Arch Linux 的安装文件需要从互联网下载，因此安装之时需要联
 
 如果你使用无线网卡，那么首先输入以下命令搜索 WiFi：
 
-```sh
+```bash
 iwctl
 ```
 >iwctl 使用帮助：<https://wiki.archlinux.org/index.php/Iwd>
 
 进入 iwd 的操作命令行里面后，可以先用 ``help`` 来查看帮助信息。
 
-```sh
+```bash
 # 查看启动了的网络界面（一般是一个 wlan0）
 station list 
 # 扫描并连接 WiFi（支持 Tab 补全 WiFi 名称）
@@ -54,7 +54,7 @@ quit
 ```
 运行这个命令来查看IP地址：
 
-```sh
+```bash
 ip addr
 ```
 
@@ -68,32 +68,32 @@ ip addr
 
 >Arch Linux 官方分区 Wiki：<https://wiki.archlinux.org/index.php/Partitioning>
 
-```sh
+```bash
 cfdisk /dev/sdX
 ```
 
 
 格式化新分区：
 
-```sh
+```bash
 mkfs.ext4 /dev/sdXN
 ```
 
 把刚刚格式化的分区作为主分区进行挂载：
 
-```sh
+```bash
 mount /dev/sdXN /mnt
  ```
 
 格式化 EFI 分区（该步骤非必须操作，一般只在新建 ESP 的时候才运行）：
 
-```sh
+```bash
 mkfs.vfat /dev/sdX1
 ```
 
 挂载EFI分区到 ```/boot/efi``` 目录（仅 UEFI 启动需要）:
 
-```sh
+```bash
 mkdir -p /mnt/boot/efi
 mount /dev/sdX1 /mnt/boot/efi
  ```
@@ -102,7 +102,7 @@ mount /dev/sdX1 /mnt/boot/efi
 
 Arch Linux 的安装镜像会自动根据速度来自动建立一个软件源列表，__因而一般无需手动编辑软件源__。如果你需要修改软件源以选择你感觉最快的服务器，使用 nano 或者 vim 打开软件源配置文件：
 
-```sh
+```bash
 nano /etc/pacman.d/mirrorlist
 ```
 
@@ -118,20 +118,20 @@ Server = https://mirrors.huaweicloud.com/archlinux/$repo/os/$arch
 
 安装基本包
 
-```sh
+```bash
 pacstrap /mnt base base-devel linux-lts linux-lts-headers linux-firmware nano
 ```
 >注意：如果你的硬件较新，建议使用 `linux` 替换 `linux-lts`，`linux-headers` 替换 `linux-lts-headers`。
 
 生成 fstab 文件（必须步骤）
 
-```sh
+```bash
 genfstab -U /mnt > /mnt/etc/fstab
 ```
 
 校验文件是否生成：
 
-```sh
+```bash
 cat /mnt/etc/fstab
 ```
 
@@ -143,20 +143,20 @@ cat /mnt/etc/fstab
 
 使用 arch-chroot 进入到新系统
 
-```sh
+```bash
 arch-chroot /mnt
 ```
 
 ### 设置时区
 
-```sh
-ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+```bash
+ln -sf /usr/bashare/zoneinfo/Asia/bashanghai /etc/localtime
 hwclock --systohc
 ```
 
 ### 修改 root 密码
 
-```sh
+```bash
 passwd root
 ```
 
@@ -164,13 +164,13 @@ passwd root
 
 编辑 `/etc/locale.gen` ，一般取消 `zh_CN.UTF-8` 的注释即可，然后运行以下命令以配置语言：
 
-```sh
+```bash
 locale-gen
 ```
 
 新建或者编辑 `/etc/locale.conf` 文件，配置全局语言。
 
-```sh
+```bash
 echo 'LANG=zh_CN.UTF-8' > /etc/locale.conf
 ```
 >如果不使用图形界面则需要把本地设置改为 ```LANG=en_US.UTF-8``` ,这是为了 TTY 始终以英文显示（在 TTY 下，中文会显示成一个个方块或者方框）。
@@ -187,7 +187,7 @@ echo 'LANG=zh_CN.UTF-8' > /etc/locale.conf
 
 ### 安装 ucode
 
-```sh
+```bash
 pacman -S intel-ucode # 或者安装 amd-ucode
 ```
 
@@ -197,13 +197,13 @@ pacman -S intel-ucode # 或者安装 amd-ucode
 
 ### 安装基本程序：
 
-```sh
+```bash
 pacman -S os-prober grub efibootmgr
 ```
 
 ### 安装 Grub 启动管理器：
 
-```sh
+```bash
 grub-install
 grub-mkconfig -o /boot/grub/grub.cfg
 ```
@@ -212,7 +212,7 @@ grub-mkconfig -o /boot/grub/grub.cfg
 
 如果是新建立的 ESP，那么建议再执行以下步骤，否则 Arch Linux 将可能只能启动一次：
 
-```sh
+```bash
 mkdir /boot/efi/BOOT && cp /boot/efi/arch/grubx64.efi /boot/efi/BOOT/BOOTx64.efi
 ```
 
@@ -220,19 +220,19 @@ mkdir /boot/efi/BOOT && cp /boot/efi/arch/grubx64.efi /boot/efi/BOOT/BOOTx64.efi
 
 新建用户
 
-```sh
+```bash
 useradd -m -G wheel username
 ```
 
 给新用户设置密码：
 
-```sh
+```bash
 passwd username
 ```
 
 你可以更改 sudo 设置，使得 wheel 组或者单个用户可以通过 sudo 命令临时调用 root 权限。
 
-```sh
+```bash
 nano /etc/sudoers
 ```
 
@@ -240,7 +240,7 @@ nano /etc/sudoers
 
 *此步骤为非必须步骤，除非你电脑只有独显。即使如此，你也不一定要安装闭源驱动。*
 
-```sh
+```bash
 pacman -S mesa nvidia-lts nvidia-settings
 ``` 
 
@@ -250,13 +250,13 @@ pacman -S mesa nvidia-lts nvidia-settings
 
 ### Network Manager 服务（与大部分桌面集成很好）
 
-```sh
+```bash
 pacman -S networkmanager
 systemctl enable NetworkManager
 ``` 
 ### systemd-networkd + iwd （通用的命令行界面）
 
-```sh
+```bash
 pacman -S iwd
 systemctl enable iwd && systemctl enable systemd-networkd && systemctl enable systemd-resolved
 ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
@@ -298,14 +298,14 @@ DHCP=yes
 
 ### Gnome
 
-```sh
+```bash
 pacman -S gnome gnome-extra
 systemctl enable gdm
 ```
 
 ### KDE Plasma
 
-```sh
+```bash
 pacman -S plasma kde-system kde-utilities kde-graphics xdg-user-dirs
 systemctl enable sddm
 ```
@@ -313,13 +313,13 @@ systemctl enable sddm
 
 安装蓝牙管理的相关包
 
-```sh
+```bash
 pacman -S bluez-utils bluez
 ```
 
 开启服务：
 
-```sh
+```bash
 systemctl enable bluetooth
 ```
 
@@ -327,7 +327,7 @@ systemctl enable bluetooth
 
 退出 chroot 然后重启
 
-```sh
+```bash
 exit
 ```
 
@@ -337,7 +337,7 @@ exit
 
 ### 基本显示字体
 
-```sh
+```bash
 sudo pacman -S noto-fonts noto-fonts-extra noto-fonts-emoji
 ```
 
@@ -345,7 +345,7 @@ sudo pacman -S noto-fonts noto-fonts-extra noto-fonts-emoji
 
 __思源字体地区分包版本（推荐）__
 
-```sh
+```bash
 sudo pacman -S adobe-source-han-mono-cn-fonts adobe-source-han-sans-cn-fonts adobe-source-han-serif-cn-fonts 
 ```
 
@@ -355,19 +355,19 @@ sudo pacman -S adobe-source-han-mono-cn-fonts adobe-source-han-sans-cn-fonts ado
 
 __思源字体 OTC 版本__
 
-```sh
+```bash
 sudo pacman -S adobe-source-han-mono-otc-fonts adobe-source-han-sans-otc-fonts adobe-source-han-serif-otc-fonts
 ```
 >`adobe-source-han-mono-otc-fonts` 在 Arch Linux CN 源提供，建议添加 Arch Linux CN 源来安装。
 
 __Noto Sans CJK__
 
-```sh
+```bash
 sudo pacman -S noto-fonts-cjk
 ```
 
 __更纱黑体__
-```sh
+```bash
 sudo pacman -S ttf-sarasa-gothic
 ```
 >`ttf-sarasa-gothic` 在 Arch Linux CN 源提供，建议添加 Arch Linux CN 源来安装。
@@ -375,7 +375,7 @@ sudo pacman -S ttf-sarasa-gothic
 ### 汉字大字符集字体
 
 __花园明朝__
-```sh
+```bash
 sudo pacman -S ttf-hanazono
 ```
 
@@ -415,7 +415,7 @@ sudo pacman -S ttf-hanazono
 
 启用该配置：
 
-```sh
+```bash
 sudo ln -s /etc/fonts/conf.avail/64-language-selector-prefer.conf /etc/fonts/conf.d/64-language-selector-prefer.conf
 ```
 
