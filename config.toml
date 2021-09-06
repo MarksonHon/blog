@@ -2,17 +2,10 @@ baseURL = "https://blog.2333ma.ml/"
 languageCode = "zh-cn"
 title = "Markson 的梦话空间"
 DefaultContentLanguage = "cn"
-theme = "paper"
+theme = "PaperMod"
 
 [params]
 subtitle = "薛定谔状态中……"
-# enableGitalk = true
-
-# Twitter Card and Open Graph settings
-enableOpenGraph = true
-enableTwitterCards = true
-title = "My Blog" # will set 'og:site_name'
-description = "My HomePage Description"  # will set 'og:description'
 
 [taxonomies]
    tag = "tags"
@@ -30,6 +23,6 @@ weight = 3
 
 [[menu.main]]
 url = "/posts"
-name = "文档存档"
+name = "文章"
 weight = 1
 

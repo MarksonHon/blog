@@ -1,9 +1,0 @@
-[submodule "themes/diary"]
-	path = themes/diary
-	url = https://github.com/AmazingRise/hugo-theme-diary.git
-[submodule "themes/dimension"]
-	path = themes/dimension
-	url = https://github.com/your-identity/hugo-theme-dimension.git
-[submodule "themes/paper"]
-	path = themes/paper
-	url = https://github.com/nanxiaobei/hugo-paper

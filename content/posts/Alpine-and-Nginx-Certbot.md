@@ -2,6 +2,7 @@
 title: "Alpine Linux 上搭建 Halo 博客"
 date: 2021-07-08T13:46:37+08:00
 draft: false
+tags: Linux
 ---
 
 # 安装 Nginx 与 Certbot
