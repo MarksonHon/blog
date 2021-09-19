@@ -53,5 +53,3 @@ sudo systemctl enable dropbear --now
 ```bash
 sudo apt remove openssh-server --autoremove
 ```
-
-## 
