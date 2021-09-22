@@ -45,7 +45,8 @@ wget https://github.com/shadowsocks/shadowsocks-rust/releases/download/v1.11.2/s
 **解压**
 
 ```bash
-7z e ./shadowsocks-v1.11.2.x86_64-unknown-linux-musl.tar.xz -so |  7z x -si -ttar -o /usr/local/bin/
+7z e ./shadowsocks-v1.11.2.x86_64-unknown-linux-musl.tar.xz -so |  7z x -si -ttar
+mv ss* /usr/local/bin
 ```
 
 **给予二进制文件可执行权限**
