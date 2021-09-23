@@ -46,7 +46,7 @@ sudo useradd -m -G sudo username
 sudo systemctl enable dropbear --now
 ```
 
-## 卸载 OpenSSH
+## 卸载 OpenSSH 服务端
 
 通过 2022 端口重新登录到你的服务器，登录之后就可以卸载 OpenSSH 了。
 
